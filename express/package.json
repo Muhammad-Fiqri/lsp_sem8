@@ -1,0 +1,15 @@
+{
+  "name": "lsp_sem8_backend",
+  "version": "1.0.0",
+  "description": "backend of lsp_sem8",
+  "main": "index.js",
+  "author": "feedez",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^5.2.1",
+    "nodemon": "^3.1.14"
+  },
+  "scripts": {
+    "dev": "nodemon index.js"
+  }
+}
