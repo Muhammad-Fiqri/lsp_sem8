@@ -1,4 +1,5 @@
 import {useEffect,useRef,useState} from 'react';
+import { Outlet } from 'react-router';
 
 import './stylesheet/DashboardLayout.css';
 
@@ -29,7 +30,6 @@ export default function DashboardLayout() {
 
     const decodedToken = parseJwt(token);
     setDecodedToken(decodedToken);
-    console.log('Decoded JWT Token:', decodedToken);
 
     const response = fetch("http://localhost:3000/api/auth/verifyJwt", {
       method: "POST",
@@ -104,7 +104,7 @@ export default function DashboardLayout() {
         </nav>
       </div>
       <div className="main-content">
-        {/* Main content goes here */}
+        <Outlet />
       </div>
     </div>
   );
