@@ -146,7 +146,7 @@ app.get('/api/get/dashboard', async (req,res) => {
       console.err('Error getting type in transactions:',err);
     })
 
-    await db.any("SELECT * FROM item_stocks WHERE stocks > 0 ORDER BY stocks DESC")
+    await db.any("SELECT i.id_item, i.id_products, i.name_products, i.stocks , p.category FROM item_stocks i LEFT JOIN products p ON i.id_products = p.id_products WHERE stocks > 0 ORDER BY stocks DESC")
     .then((data) => {
       dashboard_data.total_stok_tertinggi = data;
     })
@@ -154,7 +154,7 @@ app.get('/api/get/dashboard', async (req,res) => {
       console.err('Error getting highest item_stocks:',err);
     })
 
-    await db.any("SELECT * FROM item_stocks WHERE stocks < 10 ORDER BY stocks ASC")
+    await db.any("SELECT i.id_item, i.id_products, i.name_products, i.stocks , p.category FROM item_stocks i LEFT JOIN products p ON i.id_products = p.id_products WHERE stocks < 10 ORDER BY stocks ASC")
     .then((data) => {
       dashboard_data.total_stok_terendah = data;
     })

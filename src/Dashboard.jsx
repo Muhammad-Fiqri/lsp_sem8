@@ -48,7 +48,7 @@ export default function Dashboard() {
                   i += 1;
                   
                   return(
-                    <tr>
+                    <tr key={i}>
                       <td>{i}</td>
                       <td>{row.name_products}</td>
                       <td>{row.category}</td>
@@ -57,7 +57,7 @@ export default function Dashboard() {
                   )
                 })
                 :
-                "Kosong"
+                  <tr></tr>
               }
             </tbody>
         </table>
@@ -71,16 +71,27 @@ export default function Dashboard() {
               <th>No</th>
               <th>Nama Barang</th>
               <th>Tanggal</th>
-              <th>Stok</th>
+              <th>Jumlah</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>1</td>
-              <td>Barang A</td>
-              <td>2023-01-01</td>
-              <td>100</td>
-            </tr>
+              { 
+                dashboardData != null ?
+                dashboardData.total_stok_masuk.map((row, i = 0) => {
+                  i += 1;
+                  
+                  return(
+                    <tr key={i}>
+                      <td>{i}</td>
+                      <td>{row.name_products}</td>
+                      <td>{row.date.split('T')[0] /*remove timezone*/}</td> 
+                      <td>{row.amount}</td>
+                    </tr>
+                  )
+                })
+                :
+                  <tr></tr>
+              }
           </tbody>
         </table>
       </div>
@@ -93,16 +104,27 @@ export default function Dashboard() {
               <th>No</th>
               <th>Nama Barang</th>
               <th>Tanggal</th>
-              <th>Stok</th>
+              <th>Jumlah</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>1</td>
-              <td>Barang A</td>
-              <td>2023-01-01</td>
-              <td>100</td>
-            </tr>
+              { 
+                dashboardData != null ?
+                dashboardData.total_stok_keluar.map((row, i = 0) => {
+                  i += 1;
+                  
+                  return(
+                    <tr key={i}>
+                      <td>{i}</td>
+                      <td>{row.name_products}</td>
+                      <td>{row.date.split('T')[0] /*remove timezone*/}</td> 
+                      <td>{row.amount}</td>
+                    </tr>
+                  )
+                })
+                :
+                  <tr></tr>
+              }
           </tbody>
         </table>
       </div>
@@ -119,12 +141,23 @@ export default function Dashboard() {
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>1</td>
-              <td>Barang A</td>
-              <td>Kategori 1</td>
-              <td>100</td>
-            </tr>
+            { 
+              dashboardData != null ?
+              dashboardData.total_stok_terendah.map((row, i = 0) => {
+                i += 1;
+                
+                return(
+                  <tr key={i}>
+                    <td>{i}</td>
+                    <td>{row.name_products}</td>
+                    <td>{row.category}</td> 
+                    <td>{row.stocks}</td>
+                  </tr>
+                )
+              })
+              :
+                <tr></tr>
+            }
           </tbody>
         </table>
       </div>
@@ -141,12 +174,23 @@ export default function Dashboard() {
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>1</td>
-              <td>Barang A</td>
-              <td>Kategori 1</td>
-              <td>100</td>
-            </tr>
+            { 
+              dashboardData != null ?
+              dashboardData.total_stok_tertinggi.map((row, i = 0) => {
+                i += 1;
+                
+                return(
+                  <tr key={i}>
+                    <td>{i}</td>
+                    <td>{row.name_products}</td>
+                    <td>{row.category}</td> 
+                    <td>{row.stocks}</td>
+                  </tr>
+                )
+              })
+              :
+                <tr></tr>
+            }
           </tbody>
         </table>
       </div>
