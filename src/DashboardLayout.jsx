@@ -40,7 +40,7 @@ export default function DashboardLayout() {
     }).then(res => res.json())
     .then(data => {
       if (data.success) {
-        alert('You are authenticated! Welcome to the dashboard.');
+        console.log("User JWT is authenticated")
       } else {
         alert('Authentication failed. Please log in again.');
         window.location.href = '/'; // Redirect to login page

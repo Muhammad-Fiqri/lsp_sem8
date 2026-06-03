@@ -4,5 +4,5 @@
 Making Dashboard
 
 # Next Plan:
-Make the middleware security (I forgot)
-Making Persediaan Barang Page
+Make the middleware security (I forgot) ✅
+Making Persediaan Barang Page 

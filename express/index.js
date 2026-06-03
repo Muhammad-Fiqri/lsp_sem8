@@ -191,10 +191,10 @@ app.get('/api/get/dashboard',AuthJWTMiddleware, async (req,res) => {
   res.status(200).json({success: true, dashboard_data})
 });
 
-app.get('/api/get/persediaan-barang', (req,res) => {
+app.get('/api/get/persediaan-barang', AuthJWTMiddleware, (req,res) => {
   db.any("SELECT * FROM item_stocks")
   .then((data) => {
-    res.status(200).json({success:true,data})
+    res.status(200).json({success:true,persediaanBarang_data:data})
   }).catch((err) => {
     console.error("Error getting data for persediaan barang:",err);
     res.status(500).json({success:false,message:"Error fetching data"})

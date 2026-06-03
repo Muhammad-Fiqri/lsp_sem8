@@ -6,40 +6,45 @@
   color: #111827;
 }
 
-.PersediaanBarang__grid {
+.grid {
   display: grid;
   gap: 24px;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   margin-bottom: 24px;
 }
 
-.PersediaanBarang__card,
-.PersediaanBarang__tableCard {
+.card,
+.tableCard {
   background: #ffffff;
   border-radius: 24px;
   box-shadow: 0 16px 32px rgba(15, 23, 42, 0.08);
   padding: 24px;
 }
 
-.PersediaanBarang__cardTitle {
+.cardTitle {
   font-size: 1.05rem;
   font-weight: 700;
   margin-bottom: 18px;
   color: #111827;
 }
 
-.PersediaanBarang__field {
+.form {
+  display: grid;
+  gap: 18px;
+}
+
+.field {
   display: grid;
   gap: 8px;
   margin-bottom: 18px;
 }
 
-.PersediaanBarang__label {
+.label {
   font-size: 0.875rem;
   color: #475569;
 }
 
-.PersediaanBarang__input {
+.input {
   width: 100%;
   padding: 14px 16px;
   border: 1px solid #d2d6dc;
@@ -49,14 +54,14 @@
   font-size: 0.95rem;
 }
 
-.PersediaanBarang__input:focus {
+.input:focus {
   outline: none;
   border-color: #2563eb;
   background: #ffffff;
   box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.12);
 }
 
-.PersediaanBarang__button {
+.button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -72,58 +77,58 @@
   transition: background 0.2s ease;
 }
 
-.PersediaanBarang__button:hover {
+.button:hover {
   background: #1e40af;
 }
 
-.PersediaanBarang__tableCard {
+.tableCard {
   overflow-x: auto;
 }
 
-.PersediaanBarang__sectionHeader {
+.sectionHeader {
   font-size: 1.05rem;
   font-weight: 700;
   margin-bottom: 18px;
 }
 
-.PersediaanBarang__table {
+.table {
   width: 100%;
   border-collapse: collapse;
   text-align: left;
   min-width: 520px;
 }
 
-.PersediaanBarang__table th,
-.PersediaanBarang__table td {
+.table th,
+.table td {
   padding: 14px 16px;
   border-bottom: 1px solid #e2e8f0;
 }
 
-.PersediaanBarang__table th {
+.table th {
   font-size: 0.95rem;
   font-weight: 700;
   color: #0f172a;
 }
 
-.PersediaanBarang__table td {
+.table td {
   font-size: 0.95rem;
   color: #334155;
 }
 
-.PersediaanBarang__status {
+.status {
   font-weight: 700;
 }
 
-.PersediaanBarang__status--available {
+.status--available {
   color: #2563eb;
 }
 
-.PersediaanBarang__status--unavailable {
+.status--unavailable {
   color: #dc2626;
 }
 
 @media (max-width: 940px) {
-  .PersediaanBarang__grid {
+  .grid {
     grid-template-columns: 1fr;
   }
 }
@@ -133,12 +138,12 @@
     padding: 16px;
   }
 
-  .PersediaanBarang__card,
-  .PersediaanBarang__tableCard {
+  .card,
+  .tableCard {
     padding: 18px;
   }
 
-  .PersediaanBarang__input {
+  .input {
     padding: 12px 14px;
   }
 }
