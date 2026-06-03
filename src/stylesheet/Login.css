@@ -1,0 +1,80 @@
+.login {
+    background-image: url(/public/pexels-markus-winkler-1430818-10261153.jpg);
+    height: 100vh;
+    width: 100vw;
+    overflow-y: scroll;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+    .text-logo {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        h1 {
+          color:white;
+          font-weight: bold;
+          -webkit-text-stroke: 5px black;
+          paint-order: stroke fill;
+          font-size: 5vw;
+        }
+
+        img {
+            width: 7vw;
+            position: relative;
+            left: 17%;
+            bottom: 25%;
+        }
+    }
+
+    .login-card {
+        background-color: white;
+        color: black;
+        width: 40vw;
+        height: 90vh;
+        margin: 5vh 5vw;
+        border-radius: 20px;
+        padding: 5%;
+
+        h1 {
+            font-weight: bold;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-top: 20px;
+
+            label {
+                font-weight: bold;
+            }
+
+            input {
+                padding: 10px;
+                border-radius: 5px;
+                border: 1px solid #ccc;
+                font-size: 16px;
+            }
+
+            button {
+                padding: 10px;
+                border-radius: 5px;
+                border: none;
+                background-color: #007BFF;
+                color: white;
+                font-size: 16px;
+                cursor: pointer;
+
+                &:hover {
+                    background-color: #0056b3;
+                }
+            }
+        }
+    }
+}
