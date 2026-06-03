@@ -26,8 +26,10 @@ export default function Login() {
       })
     }).then(res => res.json())
     .then(data => {
+      alert(data.message);
+
       if (data.success) {
-        alert("Login successful!");
+        window.location.href = "/dashboard"; // Change this to your desired route
       }
     });
   }

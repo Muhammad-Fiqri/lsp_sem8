@@ -2,4 +2,4 @@
 
 # Next Plan:
 
-Setting Up Login Page
+Setting Up Login Page and Sign Up Page
