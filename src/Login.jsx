@@ -29,6 +29,7 @@ export default function Login() {
       alert(data.message);
 
       if (data.success) {
+        sessionStorage.setItem("jwt", data.jwt);
         window.location.href = "/dashboard"; // Change this to your desired route
       }
     });
@@ -55,6 +56,8 @@ export default function Login() {
     .then(data => {
       if (data.success) {
         alert("Signup successful! Please wait for database admin approval.");
+      } else {
+        alert(data.message);
       }
     });
   }

@@ -6,6 +6,10 @@ const cors = require('cors');
 const pgp = require('pg-promise')();
 const db = pgp('postgres://postgres:postgres@localhost:5432/lsp_sem8');
 const bcrypt = require('bcryptjs');
+const dotenv = require('dotenv');
+const jwt = require('jsonwebtoken');
+
+dotenv.config();
 
 app.use(cors());
 app.use(express.json());
@@ -34,7 +38,16 @@ app.post('/api/auth/login', (req, res) => {
       }
 
       if (isMatch) {
-        res.json({ success: true, message: 'Login successful!' });
+        let jwtSecretKey = process.env.JWT_SECRET_KEY || 'your_jwt_secret_key';
+        let jwtdata = {
+          time: Date(),
+          userId: data.id_users,
+          username: data.username,
+          role: data.role
+        };
+        const token = jwt.sign(jwtdata, jwtSecretKey, { expiresIn: '1h' });
+
+        res.json({ success: true, message: 'Login successful!', jwt: token });
       } else {
         res.status(401).json({ success: false, message: 'Invalid username or password.' });
       }
@@ -42,6 +55,8 @@ app.post('/api/auth/login', (req, res) => {
   })
   .catch((error) => {
     console.log('ERROR:', error);
+    console.log('No accunt found with username:', req.body.username);
+    res.status(401).json({ success: false, message: 'Invalid username or password.' });
   });
 });
 
@@ -56,16 +71,45 @@ app.post('/api/auth/signup', (req, res) => {
       return;
     }
 
-    db.one('INSERT INTO users (username,password) VALUES ($1, $2) RETURNING *', [req.body.username, hashedPassword])
+    db.one('SELECT * FROM users WHERE username = $1', [req.body.username])
     .then((data) => {
-      console.log('DATA:', data);
+      if(data) {
+        console.error('Account already existed');
+        res.status(500).json({ success: false, message: 'Account already exist, please Login instead'})
+      } else {
+        db.one('INSERT INTO users (username,password) VALUES ($1, $2) RETURNING *', [req.body.username, hashedPassword])
+        .then((data) => {
+          console.log('DATA:', data);
+          res.json({ success: true, message: 'Signup successful! Please wait for database admin approval.' });
+        })
+        .catch((error) => {
+          console.log('ERROR:', error);
+        });
+      }
     })
     .catch((error) => {
-      console.log('ERROR:', error);
+      console.error(error);
     });
   });
+});
 
-  res.json({ success: true, message: 'Signup successful! Please wait for database admin approval.' });
+app.post('/api/auth/verifyJwt', (req, res) => {
+  let TokenHeaderKey = process.env.TOKEN_HEADER_KEY;
+  let jwtSecretKey = process.env.JWT_SECRET_KEY || 'your_jwt_secret_key';
+
+  try {
+    const token = req.header(TokenHeaderKey);
+
+    const verified = jwt.verify(token, jwtSecretKey);
+    if (verified) {
+        return res.status(200).send({success: true, message: "Successfully Verified"});
+    } else {
+        // Access Denied
+        return res.status(401).send({success: false, message: "Access Denied"});
+    }
+  } catch (err) {
+    return res.status(401).json({success: false, message: "Error verifying JWT"});
+  }
 });
 
 
