@@ -5,6 +5,7 @@ import { BrowserRouter, Routes, Route } from "react-router";
 import Login from './Login.jsx'
 import DashboardLayout from './DashboardLayout.jsx'
 import Dashboard from './Dashboard.jsx'
+import PersediaanBarang from './PersediaanBarang.jsx';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -13,6 +14,7 @@ createRoot(document.getElementById('root')).render(
         <Route path="/" element={<Login />} />
         <Route element={<DashboardLayout />}>
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/persediaan-barang" element={<PersediaanBarang />} />
         </Route>
       </Routes>
     </BrowserRouter>
