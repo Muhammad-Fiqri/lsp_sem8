@@ -51,7 +51,7 @@ export default function Dashboard() {
                     <tr>
                       <td>{i}</td>
                       <td>{row.name_products}</td>
-                      <td>Kategori 1</td>
+                      <td>{row.category}</td>
                       <td>{row.stocks}</td>
                     </tr>
                   )

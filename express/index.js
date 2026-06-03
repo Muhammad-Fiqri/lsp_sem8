@@ -122,7 +122,7 @@ app.get('/api/get/dashboard', async (req,res) => {
       total_stok_terendah: null
     }
 
-    await db.any("SELECT * FROM item_stocks")
+    await db.any("SELECT i.id_item, i.id_products, i.name_products, i.stocks , p.category FROM item_stocks i LEFT JOIN products p ON i.id_products = p.id_products")
     .then((data) => {
       dashboard_data.total_barang = data;
     })
