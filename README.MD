@@ -1,5 +1,7 @@
 # AKU MAU LULUS
 
-# Next Plan:
+# Last Work:
+Setting Up Dashboard Layout
 
-Setting Up Login Page and Sign Up Page
+# Next Plan:
+Setting Up Dashboard Page
