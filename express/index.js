@@ -170,6 +170,16 @@ app.get('/api/get/dashboard', async (req,res) => {
   res.status(200).json({success: true, dashboard_data})
 });
 
+app.get('/api/get/persediaan-barang', (req,res) => {
+  db.any("SELECT * FROM item_stocks")
+  .then((data) => {
+    res.status(200).json({success:true,data})
+  }).catch((err) => {
+    console.error("Error getting data for persediaan barang:",err);
+    res.status(500).json({success:false,message:"Error fetching data"})
+  })
+})
+
 //Done
 
 app.get('/', (req, res) => {
