@@ -14,9 +14,7 @@ dotenv.config();
 app.use(cors());
 app.use(express.json());
 
-app.get('/', (req, res) => {
-  res.send('API Gateway, nothing to see here!');
-});
+//Auth
 
 app.post('/api/auth/login', (req, res) => {
   console.log(req.body);
@@ -112,7 +110,71 @@ app.post('/api/auth/verifyJwt', (req, res) => {
   }
 });
 
+//Get
 
+app.get('/api/get/dashboard', async (req,res) => {
+  async function getDashboardData() {
+    let dashboard_data = {
+      total_barang: null,
+      total_stok_masuk: null,
+      total_stok_keluar: null,
+      total_stok_tertinggi: null,
+      total_stok_terendah: null
+    }
+
+    await db.any("SELECT * FROM item_stocks")
+    .then((data) => {
+      dashboard_data.total_barang = data;
+    })
+    .catch((err) => {
+      console.err('Error getting item_stocks:',err);
+    })
+
+    await db.any("SELECT * FROM transactions WHERE type = 'in'")
+    .then((data) => {
+      dashboard_data.total_stok_masuk = data
+    })
+    .catch((err) => {
+      console.err('Error getting type in transactions:',err);
+    })
+
+    await db.any("SELECT * FROM transactions WHERE type = 'out'")
+    .then((data) => {
+      dashboard_data.total_stok_keluar = data
+    })
+    .catch((err) => {
+      console.err('Error getting type in transactions:',err);
+    })
+
+    await db.any("SELECT * FROM item_stocks WHERE stocks > 0 ORDER BY stocks DESC")
+    .then((data) => {
+      dashboard_data.total_stok_tertinggi = data;
+    })
+    .catch((err) => {
+      console.err('Error getting highest item_stocks:',err);
+    })
+
+    await db.any("SELECT * FROM item_stocks WHERE stocks < 10 ORDER BY stocks ASC")
+    .then((data) => {
+      dashboard_data.total_stok_terendah = data;
+    })
+    .catch((err) => {
+      console.err('Error getting highest item_stocks:',err);
+    })
+
+    return dashboard_data;
+  }
+
+  let dashboard_data = await getDashboardData()
+
+  res.status(200).json({success: true, dashboard_data})
+});
+
+//Done
+
+app.get('/', (req, res) => {
+  res.send('API Gateway, nothing to see here!');
+});
 
 app.listen(port, () => {
   console.log(`Example app listening on  http://localhost:${port}`);
