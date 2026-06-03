@@ -14,6 +14,27 @@ dotenv.config();
 app.use(cors());
 app.use(express.json());
 
+//Middleware
+
+const AuthJWTMiddleware = function(req,res,next) {
+  let TokenHeaderKey = process.env.TOKEN_HEADER_KEY;
+  let jwtSecretKey = process.env.JWT_SECRET_KEY || 'your_jwt_secret_key';
+
+  try {
+    const token = req.header(TokenHeaderKey);
+
+    const verified = jwt.verify(token, jwtSecretKey);
+    if (verified) {
+        console.log({success: true, message: "Successfully Verified"});
+        next()
+    } else {
+        return res.status(401).send({success: false, message: "Access Denied"});
+    }
+  } catch (err) {
+    return res.status(401).json({success: false, message: "Error verifying JWT", error: err});
+  }
+}
+
 //Auth
 
 app.post('/api/auth/login', (req, res) => {
@@ -112,7 +133,7 @@ app.post('/api/auth/verifyJwt', (req, res) => {
 
 //Get
 
-app.get('/api/get/dashboard', async (req,res) => {
+app.get('/api/get/dashboard',AuthJWTMiddleware, async (req,res) => {
   async function getDashboardData() {
     let dashboard_data = {
       total_barang: null,
