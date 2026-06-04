@@ -14,11 +14,7 @@ export default function PersediaanBarang() {
     const [stokBarangKeluar, setStokBarangKeluar] = useState("");
     const [loadingNamaBarangKeluar, setLoadingNamaBarangKeluar] = useState(false);
 
-    const hasRun = useRef(false);
-    useEffect(() => {
-        if(hasRun.current) return;
-        hasRun.current = true;
-
+    function getPersediaanBarangData() {
         const token = sessionStorage.getItem('jwt');
 
         const response = fetch("http://localhost:3000/api/get/persediaan-barang", {
@@ -35,6 +31,13 @@ export default function PersediaanBarang() {
                 alert('Data Persediaan Barang Retrievation Failed');
             }
         })
+    }
+    const hasRun = useRef(false);
+    useEffect(() => {
+        if(hasRun.current) return;
+        hasRun.current = true;
+
+        getPersediaanBarangData()
     },[])
 
     // Handle ID input change for Barang Masuk - fetch product name from API
@@ -117,47 +120,42 @@ export default function PersediaanBarang() {
 
     // Handle form submission for Barang Masuk via action
     async function handleActionBarangMasuk(formData) {
-        const idBarang = formData.get("masuk-id");
-        const stokBarang = formData.get("masuk-jumlah");
+        setIDBarangMasuk(formData.get("masuk-id"));
+        setJumlahBarangMasuk(formData.get("masuk-jumlah"));
         
-        if (!idBarang || !stokBarang) {
-            alert("Mohon lengkapi ID Barang dan Stok");
+        if (!IDBarangMasuk || !jumlahBarangMasuk) {
+            alert("Mohon lengkapi ID Barang dan Jumlah Barang Masuk");
             return;
         }
 
         const token = sessionStorage.getItem('jwt');
+        const transaction_date = new Date();
         
         try {
-            const response = await fetch("http://localhost:3000/api/update/barang-masuk", {
-                method: 'POST',
+            const response = await fetch("http://localhost:3000/api/update/persediaan-barang", {
+                method: 'PUT',
                 headers: {
                     "Authorization": token,
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    id_products: idBarang,
-                    stocks: parseInt(stokBarang)
+                    type: "in",
+                    id_products: IDBarangMasuk,
+                    name_products: namaBarangMasuk,
+                    amount: parseInt(jumlahBarangMasuk),
+                    date: transaction_date.getDay() + "/" + transaction_date.getMonth() + "/" + transaction_date.getFullYear() 
                 })
             });
 
             const data = await response.json();
-            
+            console.log(data);
             if (data.success) {
                 alert('Barang Masuk Berhasil Ditambahkan');
                 setIDBarangMasuk("");
                 setNamaBarangMasuk("");
                 setJumlahBarangMasuk("");
-                // Refresh data
-                const refreshResponse = await fetch("http://localhost:3000/api/get/persediaan-barang", {
-                    method: 'GET',
-                    headers: {
-                        "Authorization": token
-                    }
-                });
-                const refreshData = await refreshResponse.json();
-                if (refreshData.success) {
-                    setPersediaanBarangData(refreshData.persediaanBarang_data);
-                }
+                
+                getPersediaanBarangData()
             } else {
                 alert(`Gagal: ${data.message || 'Barang Masuk Gagal Ditambahkan'}`);
             }
@@ -198,17 +196,9 @@ export default function PersediaanBarang() {
                 setIDBarangKeluar("");
                 setNamaBarangKeluar("");
                 setStokBarangKeluar("");
+
                 // Refresh data
-                const refreshResponse = await fetch("http://localhost:3000/api/get/persediaan-barang", {
-                    method: 'GET',
-                    headers: {
-                        "Authorization": token
-                    }
-                });
-                const refreshData = await refreshResponse.json();
-                if (refreshData.success) {
-                    setPersediaanBarangData(refreshData.persediaanBarang_data);
-                }
+                getPersediaanBarangData()
             } else {
                 alert(`Gagal: ${data.message || 'Barang Keluar Gagal Dicatat'}`);
             }
@@ -217,9 +207,6 @@ export default function PersediaanBarang() {
         }
     }
 
-    function handleInputBarangMasuk(formData) {
-        setIDBarangMasuk(formData.get("masuk-id"))
-    }
     return (
         <div className="PersediaanBarang">
             <div className="grid">

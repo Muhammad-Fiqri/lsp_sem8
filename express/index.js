@@ -217,6 +217,30 @@ app.get('/api/get/persediaan-barang/nama-barang-from-id-barang/:id_barang_masuk'
   })
 })
 
+//Put
+
+app.put('/api/update/persediaan-barang', AuthJWTMiddleware, (req,res) => {
+  /* req.body example
+    {
+      type: 'in
+      id_products: '1',
+      name_products: 'Batu Bata Merah',
+      amount: 10,
+      date: '4/5/2026'
+    }
+  */
+  const {type,id_products,name_products,amount,date} = req.body;
+
+  db.one("INSERT INTO transactions (type,id_products,name_products,amount,date) VALUES ($1,$2,$3,$4,$5) RETURNING *",[type,id_products,name_products,amount,date])
+  .then((data) => {
+    console.log(data);
+    res.status(200).json({success:true,message:'berhasil memasukan data ke tabel transactions',data})
+  }).catch((err) => {
+    console.error("error insert data into transactions:",err);
+    res.status(500).json({success:false,message:err})
+  })
+})
+
 //Done
 
 app.get('/', (req, res) => {
