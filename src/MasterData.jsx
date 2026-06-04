@@ -56,15 +56,11 @@ export default function MasterData() {
         }
     }
 
-    const handleSemuaNamaBarangSearch = async (e) => {
-        e.preventDefault;
+    useEffect(() => {
+        getNamaBarang("*")
+    },[])
 
-        let nama_barang = e.target.value;
-
-        if(nama_barang == "") {
-            nama_barang = "*"
-        }
-
+    const getNamaBarang = async (nama_barang) => {
         const token = sessionStorage.getItem('jwt');
         try {
             const response = await fetch(`http://localhost:3000/api/get/master-data/semua-nama-barang/${nama_barang}`,{
@@ -85,6 +81,39 @@ export default function MasterData() {
             console.error("Error getting item name:",error);
             setMasterData((prev) => ({ ...prev, daftar_semua_nama_barang : masterDataTemplate.daftar_semua_nama_barang }));
         }
+    }
+
+    const handleSemuaNamaBarangSearch = (e) => {
+        e.preventDefault;
+
+        let nama_barang = e.target.value;
+
+        if(nama_barang == "") {
+            nama_barang = "*"
+        }
+
+        getNamaBarang(nama_barang);
+    }
+
+    const toggleOverlay = (e) => {
+        e.preventDefault;
+        if (document.querySelector(".overlay").style.display == "block") {
+            const overlayElement = document.querySelector(".overlay").style.display = "none"
+        } else {
+            const overlayElement = document.querySelector(".overlay").style.display = "block"
+        }
+    }
+
+    const handleUserForm = (formData) => {
+        let mode = formData.get("mode");
+        let username = formData.get("username");
+        let password = formData.get("password");
+        let role = formData.get("role");
+
+        console.log(mode);
+        console.log(username);
+        console.log(password);
+        console.log(role);
     }
 
     return(
@@ -184,7 +213,7 @@ export default function MasterData() {
                                     <td>{i}</td>
                                     <td>{row.username}</td>
                                     <td>{row.role}</td>
-                                    <td><img src="/Action.svg" alt="Add Account" style={{cursor:'pointer'}} title='Aksi'/></td>
+                                    <td><img onClick={toggleOverlay} src="/Action.svg" alt="Add Account" style={{cursor:'pointer'}} title='Aksi'/></td>
                                 </tr>
                             )
                             })
@@ -193,11 +222,39 @@ export default function MasterData() {
                         }
                         <tr>
                             <td>
-                                <img src="/Add box.svg" alt="Add Account" className='tambah-akun-button' style={{cursor:'pointer'}} title='Tambah Akun'/>
+                                <img onClick={toggleOverlay} src="/Add box.svg" alt="Add Account" className='tambah-akun-button' style={{cursor:'pointer'}} title='Tambah Akun'/>
                             </td>
                         </tr>
                     </tbody>
                 </table>
+
+                <div className="overlay">
+                    <button onClick={toggleOverlay} className='close-button'>Tutup</button>
+                    <form action={handleUserForm}>
+                        <select name="mode" id="mode">
+                            <option value="create">Buat Pengguna</option>
+                            <option value="Read">Detail Pengguna</option>
+                            <option value="update">Perbarui Pengguna</option>
+                            <option value="hapus">Hapus Pengguna</option>
+                        </select>
+                        <label htmlFor="username">
+                            Username:
+                        </label>
+                        <input type="text" name='username' placeholder='Masukan Nama Pengguna'/>
+                        <label htmlFor="password">
+                            Password:
+                        </label>
+                        <input type="text" name='password' placeholder='Masukan Sandi Pengguna'/>
+                        <label htmlFor="role">
+                            Role:
+                        </label>
+                        <select name="role" id="role">
+                            <option value="manager">Manager</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                        <button type='submit'>Submit</button>
+                    </form>
+                </div>
             </div>
         </div>
     )

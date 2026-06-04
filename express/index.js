@@ -251,6 +251,12 @@ app.get('/api/get/master-data/semua-nama-barang/:nama_barang', AuthJWTMiddleware
   }
 })
 
+app.get('/api/get/master-data/manajemen-pengguna/:username', AuthJWTMiddleware, (req,res) => {
+  const username = req.params.username;
+
+  console.log(username)
+})
+
 //Put
 
 app.put('/api/update/persediaan-barang', AuthJWTMiddleware, (req, res) => {
