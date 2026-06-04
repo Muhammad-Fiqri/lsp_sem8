@@ -3,6 +3,7 @@
 # Last Work:
 Make the middleware security (I forgot) ✅
 Making Persediaan Barang Page ✅
+Make Master Data Page ✅
 
 # Next Plan:
-Make Master Data Page 
+Make Laporan Page
