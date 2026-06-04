@@ -90,7 +90,7 @@ app.post('/api/auth/signup', (req, res) => {
       return;
     }
 
-    db.one('SELECT * FROM users WHERE username = $1', [req.body.username])
+    db.none("SELECT * FROM users WHERE username = $1 AND role = 'admin'", [req.body.username])
     .then((data) => {
       if(data) {
         console.error('Account already existed');
@@ -102,11 +102,13 @@ app.post('/api/auth/signup', (req, res) => {
           res.json({ success: true, message: 'Signup successful! Please wait for database admin approval.' });
         })
         .catch((error) => {
+          res.status(500).json({ success: false, message: 'Error inserting data to users', error})
           console.log('ERROR:', error);
         });
       }
     })
     .catch((error) => {
+      res.status(500).json({ success: false, message: 'Account already existed', error})
       console.error(error);
     });
   });
@@ -251,12 +253,6 @@ app.get('/api/get/master-data/semua-nama-barang/:nama_barang', AuthJWTMiddleware
   }
 })
 
-app.get('/api/get/master-data/manajemen-pengguna/:username', AuthJWTMiddleware, (req,res) => {
-  const username = req.params.username;
-
-  console.log(username)
-})
-
 //Put
 
 app.put('/api/update/persediaan-barang', AuthJWTMiddleware, (req, res) => {
@@ -296,6 +292,74 @@ app.put('/api/update/persediaan-barang', AuthJWTMiddleware, (req, res) => {
     res.status(500).json({ success: false, message: 'Internal server error during transaction' });
   });
 });
+
+//POST
+
+app.post('/api/create/persediaan-barang/manager-account', AuthJWTMiddleware, (req,res) => {
+  console.log(req.body);
+
+  // Handle signup logic here, e.g., create user account, etc.
+  bcrypt.hash(req.body.password, 10, (err, hashedPassword) => {
+    if (err) {
+      console.error('Error hashing password:', err);
+      res.status(500).json({ success: false, message: 'Error occurred while signing up.' });
+      return;
+    }
+
+    db.none('SELECT * FROM users WHERE username = $1 AND role = $2', [req.body.username,req.body.role])
+    .then((data) => {
+      if(data) {
+        console.error('Manager Account already existed');
+        res.status(500).json({ success: false, message: 'Manager Account already exist, please Login instead'})
+      } else {
+        db.one('INSERT INTO users (username,password,role) VALUES ($1, $2, $3) RETURNING *', [req.body.username, hashedPassword, req.body.role])
+        .then((data) => {
+          console.log('DATA:', data);
+          res.json({ success: true, message: 'Manager Signup successful! Please wait for database admin approval.' });
+        })
+        .catch((error) => {
+          res.status(500).json({ success: false, message: 'Error inserting manager data to users', error})
+          console.log('ERROR:', error);
+        });
+      }
+    })
+    .catch((error) => {
+      res.status(500).json({ success: false, message: 'Manager Account already existed', error})
+      console.error(error);
+    });
+  });
+})
+
+//DELETE
+
+app.delete('/api/delete/account',AuthJWTMiddleware, (req,res) => {
+  console.log('/api/delete/account: ',req.body);
+
+  db.oneOrNone("SELECT * FROM users WHERE username = $1 AND role = $2",[req.body.username,req.body.role])
+  .then((data) => {
+    console.log('Data: ',data);
+    bcrypt.compare(req.body.password, data.password, (err, isMatch) => {
+      if(isMatch){
+        db.none("DELETE FROM users WHERE username = $1 AND role = $2",[req.body.username,req.body.role])
+        .then((data) => {
+          console.log('Data: ',data);
+          res.status(200).json({success:true,message:'Account successfully deleted'});
+        })
+        .catch((err) => {
+          console.error('Error: ',err);
+          res.status(500).json({success:false,message:'Failed at deleting account',err});
+        })
+      } else {
+        console.error("Error: ","password doesn't match");
+        res.status(500).json({success:false,message:'password doesn\'t match'});
+      }
+    })
+  })
+  .catch((error) => {
+    console.error(error);
+    res.status(500).json({success:true,message:'No account matched that name or role'});
+  })
+})
 
 //Done
 

@@ -110,10 +110,96 @@ export default function MasterData() {
         let password = formData.get("password");
         let role = formData.get("role");
 
-        console.log(mode);
-        console.log(username);
-        console.log(password);
-        console.log(role);
+        const token = sessionStorage.getItem('jwt');
+
+        async function createUserAdmin(token) {
+            const response = await fetch('http://localhost:3000/api/auth/signup', {
+                method: 'POST',
+                headers: {
+                    'Content-Type' : 'application/json',
+                    'Authorization'  : token
+                },
+                body: JSON.stringify({
+                    username,
+                    password
+                })
+            })
+
+            const data = await response.json();
+
+            if(data.success){
+                alert(data.message);
+            } else {
+                alert("Failed creating account");
+                console.error(data.error)
+            }
+        }
+
+        async function createUserManager(token) {
+            const response = await fetch('http://localhost:3000/api/create/persediaan-barang/manager-account', {
+                method: 'POST',
+                headers: {
+                    'Content-Type' : 'application/json',
+                    'Authorization'  : token
+                },
+                body: JSON.stringify({
+                    username,
+                    password,
+                    role
+                })
+            })
+
+            const data = await response.json();
+
+            if(data.success){
+                alert(data.message);
+            } else {
+                alert("Failed creating manager account");
+                console.error(data.error)
+            }
+        }
+
+        if(mode == "create") {
+            if(role == "admin") {
+                createUserAdmin(token);
+            }
+            if(role == "manager") {
+                createUserManager(token)
+            }
+        }
+        
+        async function deleteUser(token) {
+            try {
+                const response = await fetch('http://localhost:3000/api/delete/account', {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type' : 'application/json',
+                        'Authorization'  : token
+                    },
+                    body: JSON.stringify({
+                        username,
+                        password,
+                        role
+                    })
+                })
+
+                const data = await response.json();
+
+                if(data.success){
+                    alert(data.message);
+                } else {
+                    alert("Failed deleting account");
+                    console.error(data.error)
+                }
+            } catch(err) {
+                alert("Failed deleting account");
+                console.log(err);
+            }
+        }
+
+        if(mode == "delete") {
+            deleteUser(token)
+        }
     }
 
     return(
@@ -233,9 +319,8 @@ export default function MasterData() {
                     <form action={handleUserForm}>
                         <select name="mode" id="mode">
                             <option value="create">Buat Pengguna</option>
-                            <option value="Read">Detail Pengguna</option>
                             <option value="update">Perbarui Pengguna</option>
-                            <option value="hapus">Hapus Pengguna</option>
+                            <option value="delete">Hapus Pengguna</option>
                         </select>
                         <label htmlFor="username">
                             Username:
