@@ -11,7 +11,7 @@ export default function PersediaanBarang() {
 
     const [IDBarangKeluar, setIDBarangKeluar] = useState("");
     const [namaBarangKeluar, setNamaBarangKeluar] = useState("");
-    const [stokBarangKeluar, setStokBarangKeluar] = useState("");
+    const [jumlahBarangKeluar, setJumlahBarangKeluar] = useState("");
     const [loadingNamaBarangKeluar, setLoadingNamaBarangKeluar] = useState(false);
 
     function getPersediaanBarangData() {
@@ -150,7 +150,7 @@ export default function PersediaanBarang() {
             const data = await response.json();
             console.log(data);
             if (data.success) {
-                alert('Barang Masuk Berhasil Ditambahkan');
+                alert(data.message);
                 setIDBarangMasuk("");
                 setNamaBarangMasuk("");
                 setJumlahBarangMasuk("");
@@ -166,36 +166,40 @@ export default function PersediaanBarang() {
 
     // Handle form submission for Barang Keluar via action
     async function handleActionBarangKeluar(formData) {
-        const idBarang = formData.get("keluar-id");
-        const stokBarang = formData.get("keluar-stok");
+        setIDBarangKeluar(formData.get("keluar-id"));
+        setJumlahBarangKeluar(formData.get("keluar-jumlah"));
         
-        if (!idBarang || !stokBarang) {
+        if (!IDBarangKeluar || !jumlahBarangKeluar) {
             alert("Mohon lengkapi ID Barang dan Stok");
             return;
         }
 
         const token = sessionStorage.getItem('jwt');
-        
+        const transaction_date = new Date();
         try {
-            const response = await fetch("http://localhost:3000/api/update/barang-keluar", {
-                method: 'POST',
+            const response = await fetch("http://localhost:3000/api/update/persediaan-barang", {
+                method: 'PUT',
                 headers: {
                     "Authorization": token,
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    id_products: idBarang,
-                    stocks: parseInt(stokBarang)
+                    type: "out",
+                    id_products: IDBarangKeluar,
+                    name_products: namaBarangKeluar,
+                    amount: parseInt(jumlahBarangKeluar),
+                    date: transaction_date.getDay() + "/" + transaction_date.getMonth() + "/" + transaction_date.getFullYear() 
+                
                 })
             });
 
             const data = await response.json();
             
             if (data.success) {
-                alert('Barang Keluar Berhasil Dicatat');
+                alert(data.message);
                 setIDBarangKeluar("");
                 setNamaBarangKeluar("");
-                setStokBarangKeluar("");
+                setJumlahBarangKeluar("");
 
                 // Refresh data
                 getPersediaanBarangData()
@@ -293,17 +297,17 @@ export default function PersediaanBarang() {
                         />
                     </div>
                     <div className="field">
-                        <label className="label" htmlFor="keluar-stok">
+                        <label className="label" htmlFor="keluar-jumlah">
                             Stok
                         </label>
                         <input
-                            id="keluar-stok"
-                            name="keluar-stok"
+                            id="keluar-jumlah"
+                            name="keluar-jumlah"
                             className="input"
                             type="number"
                             placeholder="Masukan Stok Barang Yang Keluar"
-                            value={stokBarangKeluar}
-                            onChange={(e) => setStokBarangKeluar(e.target.value)}
+                            value={jumlahBarangKeluar}
+                            onChange={(e) => setJumlahBarangKeluar(e.target.value)}
                         />
                     </div>
                     <button style={namaBarangKeluar == "" ? {backgroundColor: '#bdc5ff'} : {backgroundColor: '#001EFF'}} className="button" type="submit" disabled={namaBarangKeluar == "" ? true : false}>
@@ -334,7 +338,7 @@ export default function PersediaanBarang() {
                                     <td>{i}</td>
                                     <td>{row.name_products}</td>
                                     <td>{row.stocks}</td>
-                                    <td className={row.stocks == 0 ? "status status--unavailable" : "status status--available"}>{row.stocks == 0 ? "Tidak Tersedia" : "Tersedia"}</td>
+                                    <td className={row.stocks <= 0 ? "status status--unavailable" : "status status--available"}>{row.stocks == 0 ? "Tidak Tersedia" : "Tersedia"}</td>
                                 </tr>
                             )
                         })

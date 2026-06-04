@@ -205,11 +205,9 @@ app.get('/api/get/persediaan-barang', AuthJWTMiddleware, (req,res) => {
 
 app.get('/api/get/persediaan-barang/nama-barang-from-id-barang/:id_barang_masuk', AuthJWTMiddleware, (req,res) => {
   const id_barang_masuk = req.params.id_barang_masuk
-  console.log(id_barang_masuk)
   db.one('SELECT name_products FROM products WHERE id_products = $1',id_barang_masuk)
   .then((data) => {
     res.status(200).json({success:true,message:"nama produk berhasil di ambil",data:data})
-    console.log(data)
   }).catch((err) => {
     console.log('Error mengambil nama produk dari id untuk persediaan barang:',err);
     res.status(500).json({success:false,message:"terjadi error ketika mengambio nama produk:",error:err})
@@ -219,27 +217,43 @@ app.get('/api/get/persediaan-barang/nama-barang-from-id-barang/:id_barang_masuk'
 
 //Put
 
-app.put('/api/update/persediaan-barang', AuthJWTMiddleware, (req,res) => {
-  /* req.body example
-    {
-      type: 'in
-      id_products: '1',
-      name_products: 'Batu Bata Merah',
-      amount: 10,
-      date: '4/5/2026'
-    }
-  */
-  const {type,id_products,name_products,amount,date} = req.body;
+app.put('/api/update/persediaan-barang', AuthJWTMiddleware, (req, res) => {
+  const { type, id_products, name_products, amount, date } = req.body;
+  console.log(req.body);
 
-  db.one("INSERT INTO transactions (type,id_products,name_products,amount,date) VALUES ($1,$2,$3,$4,$5) RETURNING *",[type,id_products,name_products,amount,date])
-  .then((data) => {
-    console.log(data);
-    res.status(200).json({success:true,message:'berhasil memasukan data ke tabel transactions',data})
-  }).catch((err) => {
-    console.error("error insert data into transactions:",err);
-    res.status(500).json({success:false,message:err})
+  // Using the transaction context 't' for all queries executed within this block
+  db.tx(async (t) => {
+    // 1. Insert into transactions
+    await t.none(
+      'INSERT INTO transactions (type, id_products, name_products, amount, date) VALUES ($1, $2, $3, $4, $5)',
+      [type, id_products, name_products, amount, date]
+    );
+
+    // 2. Update item stocks conditionally using the same transaction object 't'
+    if (type === 'out') {
+      // Changed .one() to .none() because standard UPDATE doesn't return rows
+      await t.none(
+        'UPDATE item_stocks SET stocks = stocks - $1 WHERE id_products = $2',
+        [amount, id_products]
+      );
+      console.log('Item stocks successfully decremented');
+    } else {
+      await t.none(
+        'UPDATE item_stocks SET stocks = stocks + $1 WHERE id_products = $2',
+        [amount, id_products]
+      );
+      console.log('Item stocks successfully incremented');
+    }
   })
-})
+  .then(() => {
+    console.log("Persediaan barang form handling succeeded");
+    res.status(200).json({ success: true, message: 'Data transaksi berhasil di input' });
+  })
+  .catch((err) => {
+    console.error("Error handling persediaan barang form: ", err);
+    res.status(500).json({ success: false, message: 'Internal server error during transaction' });
+  });
+});
 
 //Done
 
