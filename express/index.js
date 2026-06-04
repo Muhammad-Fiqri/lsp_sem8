@@ -220,7 +220,7 @@ app.get('/api/get/persediaan-barang/nama-barang-from-id-barang/:id_barang_masuk'
 app.get('/api/get/master-data/kategori-barang/:kategori', AuthJWTMiddleware, (req,res) => {
   const kategori = req.params.kategori;
 
-  db.any('SELECT p.name_products, p.category, i.stocks  FROM products p LEFT JOIN item_stocks i ON p.id_products = i.id_products WHERE p.category = $1',kategori)
+  db.any('SELECT p.name_products, p.category, i.stocks FROM products p LEFT JOIN item_stocks i ON p.id_products = i.id_products WHERE p.category = $1',kategori)
   .then((data) => {
     res.status(200).json({success:true,message:'Barang berdasarkan kategori berhasil di ambil',data})
   }).catch((err) => {
@@ -229,6 +229,27 @@ app.get('/api/get/master-data/kategori-barang/:kategori', AuthJWTMiddleware, (re
   })
 })
 
+app.get('/api/get/master-data/semua-nama-barang/:nama_barang', AuthJWTMiddleware, (req,res) => {
+  const nama_barang = req.params.nama_barang
+
+  if (nama_barang != '*') {
+    db.any("SELECT * FROM products WHERE name_products ILIKE $1",'%'+nama_barang+'%')
+    .then((data) => {
+      res.status(200).json({success:true,message:"Mengambil data barang dari nama berhasil",data})
+    })
+    .catch((err) => {
+      console.log("Error getting products by name:".err);
+    })
+  } else {
+    db.any("SELECT * FROM products")
+    .then((data) => {
+      res.status(200).json({success:true,message:"Mengambil data barang dari nama berhasil",data})
+    })
+    .catch((err) => {
+      console.log("Error getting products by name:".err);
+    })
+  }
+})
 
 //Put
 

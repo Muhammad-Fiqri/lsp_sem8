@@ -56,6 +56,37 @@ export default function MasterData() {
         }
     }
 
+    const handleSemuaNamaBarangSearch = async (e) => {
+        e.preventDefault;
+
+        let nama_barang = e.target.value;
+
+        if(nama_barang == "") {
+            nama_barang = "*"
+        }
+
+        const token = sessionStorage.getItem('jwt');
+        try {
+            const response = await fetch(`http://localhost:3000/api/get/master-data/semua-nama-barang/${nama_barang}`,{
+                method: 'GET',
+                headers: {
+                    Authorization: token
+                }
+            })
+
+            const data = await response.json();
+            console.log(data);
+            if (data.success) {
+                setMasterData((prev) => ({ ...prev, daftar_semua_nama_barang: data.data }));
+            } else {
+                setMasterData((prev) => ({ ...prev, daftar_semua_nama_barang : masterDataTemplate.daftar_semua_nama_barang }));
+            }
+        } catch(error) {
+            console.error("Error getting item name:",error);
+            setMasterData((prev) => ({ ...prev, daftar_semua_nama_barang : masterDataTemplate.daftar_semua_nama_barang }));
+        }
+    }
+
     return(
         <div className="master-data">
             <div className="kategori-barang">
@@ -100,7 +131,7 @@ export default function MasterData() {
             <div className="daftar-semua-nama-barang">
                 <h3>Daftar Semua Nama Barang</h3>
                 <hr />
-                <input type="search" name="search-nama-barang" id="search-nama-barang" placeholder='Cari nama barang'/>
+                <input onChange={handleSemuaNamaBarangSearch} type="search" name="search-nama-barang" id="search-nama-barang" placeholder='Cari nama barang'/>
                 <img src="/Search.svg" alt="Search!" id='search'/>
                 <table>
                     <thead>
