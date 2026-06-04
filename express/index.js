@@ -191,6 +191,8 @@ app.get('/api/get/dashboard',AuthJWTMiddleware, async (req,res) => {
   res.status(200).json({success: true, dashboard_data})
 });
 
+
+
 app.get('/api/get/persediaan-barang', AuthJWTMiddleware, (req,res) => {
   db.any("SELECT * FROM item_stocks ORDER BY stocks ASC")
   .then((data) => {
@@ -198,6 +200,20 @@ app.get('/api/get/persediaan-barang', AuthJWTMiddleware, (req,res) => {
   }).catch((err) => {
     console.error("Error getting data for persediaan barang:",err);
     res.status(500).json({success:false,message:"Error fetching data"})
+  })
+})
+
+app.get('/api/get/persediaan-barang/nama-barang-from-id-barang/:id_barang_masuk', AuthJWTMiddleware, (req,res) => {
+  const id_barang_masuk = req.params.id_barang_masuk
+  console.log(id_barang_masuk)
+  db.one('SELECT name_products FROM products WHERE id_products = $1',id_barang_masuk)
+  .then((data) => {
+    res.status(200).json({success:true,message:"nama produk berhasil di ambil",data:data})
+    console.log(data)
+  }).catch((err) => {
+    console.log('Error mengambil nama produk dari id untuk persediaan barang:',err);
+    res.status(500).json({success:false,message:"terjadi error ketika mengambio nama produk:",error:err})
+    console.log(err)
   })
 })
 

@@ -54,6 +54,10 @@
   font-size: 0.95rem;
 }
 
+.input[id$="nama"] {
+  background-color: #D9D9D9;
+}
+
 .input:focus {
   outline: none;
   border-color: #2563eb;
