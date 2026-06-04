@@ -192,7 +192,7 @@ app.get('/api/get/dashboard',AuthJWTMiddleware, async (req,res) => {
 });
 
 app.get('/api/get/persediaan-barang', AuthJWTMiddleware, (req,res) => {
-  db.any("SELECT * FROM item_stocks")
+  db.any("SELECT * FROM item_stocks ORDER BY stocks ASC")
   .then((data) => {
     res.status(200).json({success:true,persediaanBarang_data:data})
   }).catch((err) => {

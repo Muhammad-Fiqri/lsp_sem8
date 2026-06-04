@@ -4,8 +4,6 @@ import { useRef,useEffect, useState } from "react";
 export default function PersediaanBarang() {
     const [persediaanBarangData, setPersediaanBarangData] = useState(null);
 
-    useEffect(() => {console.log(persediaanBarangData)},[persediaanBarangData])
-
     const hasRun = useRef(false);
     useEffect(() => {
         if(hasRun.current) return;
@@ -137,7 +135,7 @@ export default function PersediaanBarang() {
                                     <td>{i}</td>
                                     <td>{row.name_products}</td>
                                     <td>{row.stocks}</td>
-                                    <td className="status status--unavailable">{row.stocks == 0 ? "Tidak Tersedia" : "Tersedia"}</td>
+                                    <td className={row.stocks == 0 ? "status status--unavailable" : "status status--available"}>{row.stocks == 0 ? "Tidak Tersedia" : "Tersedia"}</td>
                                 </tr>
                             )
                         })
