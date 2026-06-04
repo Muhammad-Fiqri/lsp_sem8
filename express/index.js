@@ -74,7 +74,7 @@ app.post('/api/auth/login', (req, res) => {
   })
   .catch((error) => {
     console.log('ERROR:', error);
-    console.log('No accunt found with username:', req.body.username);
+    console.log('No account found with username:', req.body.username);
     res.status(401).json({ success: false, message: 'Invalid username or password.' });
   });
 });
