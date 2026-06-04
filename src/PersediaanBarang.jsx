@@ -60,10 +60,8 @@ export default function PersediaanBarang() {
                     "Authorization": token
                 }
             });
-            console.log("fetching product name for input barang masuk...")
 
             const data = await response.json();
-            console.log(data)
             
             if (data.success) {
                 setNamaBarangMasuk(data.data.name_products);
@@ -95,7 +93,7 @@ export default function PersediaanBarang() {
         const token = sessionStorage.getItem('jwt');
         
         try {
-            const response = await fetch(`http://localhost:3000/api/get/persediaan-barang/nama-barang-from-id-barang?id=${idValue}`, {
+            const response = await fetch(`http://localhost:3000/api/get/persediaan-barang/nama-barang-from-id-barang/${idValue}`, {
                 method: 'GET',
                 headers: {
                     "Authorization": token
@@ -104,8 +102,8 @@ export default function PersediaanBarang() {
 
             const data = await response.json();
             
-            if (data.success && data.nama_barang) {
-                setNamaBarangKeluar(data.nama_barang);
+            if (data.success) {
+                setNamaBarangKeluar(data.data.name_products);
             } else {
                 setNamaBarangKeluar("");
             }
