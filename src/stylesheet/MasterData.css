@@ -1,31 +1,40 @@
-.dashboard {
+.master-data {
+    background-color: white;
+    height: 100%;
     width: 100%;
-    height: 80vh;
+    border-radius: 20px;
     display: grid;
-    grid-template-columns: auto auto;
-    grid-template-rows: auto auto auto;
-    column-gap: 20px;
-    row-gap: 20px;
+    grid-template-columns: 100%;
+    grid-template-rows: 1fr 1fr 1fr;
+    gap: 130px;
 
-    div[class^="total-"] {
-        overflow-y: scroll;
-    }
-
-    .total-barang {
+    .kategori-barang {
         width: 100%;
         height: 70vh;
-        grid-column: 1 / 3;
+        grid-column: 1 / 2;
         grid-row: 1/2;
         background-color: white;
         border-radius: 20px;
+
         h3 {
             color: #1100FF;
             padding: 20px;
         }
 
+        select {
+            height: 45px;
+            margin-top: 10px;
+            margin-left: 20px;
+            border-radius: 10px;
+            background-color: white;
+            padding-left: 10px;
+            font-size: 15px;
+        }
+
         table {
             width: 100%;
             padding: 20px;
+
             tr {
                 th {
                     text-align: left;
@@ -35,21 +44,39 @@
         }
     }
 
-    .total-stok-masuk {
+    .daftar-semua-nama-barang {
         width: 100%;
         height: 70vh;
         grid-column: 1 / 2;
         grid-row: 2/3;
         background-color: white;
         border-radius: 20px;
+
         h3 {
             color: #1100FF;
             padding: 20px;
         }
 
+        input[type='search'] {
+            height: 45px;
+            margin-top: 10px;
+            margin-left: 20px;
+            border-radius: 10px;
+            background-color: white;
+            padding-left: 10px;
+            font-size: 15px;
+        }
+
+        #search {
+            position: relative;
+            right: 35px;
+            top: 5px;
+        }
+
         table {
             width: 100%;
             padding: 20px;
+
             tr {
                 th {
                     text-align: left;
@@ -59,37 +86,14 @@
         }
     }
 
-    .total-stok-keluar {
-        width: 100%;
-        height: 70vh;
-        grid-column: 2 / 3;
-        grid-row: 2/3;
-        background-color: white;
-        border-radius: 20px;
-        h3 {
-            color: #1100FF;
-            padding: 20px;
-        }
-
-        table {
-            width: 100%;
-            padding: 20px;
-            tr {
-                th {
-                    text-align: left;
-                    border-bottom: 1px solid black;
-                }
-            }
-        }
-    }
-
-    .total-stok-tertinggi {
+    .manajemen-pengguna {
         width: 100%;
         height: 70vh;
         grid-column: 1 / 2;
         grid-row: 3/4;
         background-color: white;
         border-radius: 20px;
+
         h3 {
             color: #1100FF;
             padding: 20px;
@@ -98,35 +102,17 @@
         table {
             width: 100%;
             padding: 20px;
+
             tr {
                 th {
                     text-align: left;
                     border-bottom: 1px solid black;
                 }
             }
-        }
-    }
 
-    .total-stok-terendah {
-        width: 100%;
-        height: 70vh;
-        grid-column: 2 / 3;
-        grid-row: 3/4;
-        background-color: white;
-        border-radius: 20px;
-        h3 {
-            color: #1100FF;
-            padding: 20px;
-        }
-
-        table {
-            width: 100%;
-            padding: 20px;
-            tr {
-                th {
-                    text-align: left;
-                    border-bottom: 1px solid black;
-                }
+            tr > td > .tambah-akun-button {
+                position: relative;
+                left: calc(100vw - 70vw);
             }
         }
     }

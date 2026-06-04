@@ -86,7 +86,8 @@
 }
 
 .tableCard {
-  overflow-x: auto;
+  overflow-y: scroll;
+  height: 50vh;
 }
 
 .sectionHeader {
