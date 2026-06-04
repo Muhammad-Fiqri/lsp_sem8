@@ -215,6 +215,21 @@ app.get('/api/get/persediaan-barang/nama-barang-from-id-barang/:id_barang_masuk'
   })
 })
 
+
+
+app.get('/api/get/master-data/kategori-barang/:kategori', AuthJWTMiddleware, (req,res) => {
+  const kategori = req.params.kategori;
+
+  db.any('SELECT p.name_products, p.category, i.stocks  FROM products p LEFT JOIN item_stocks i ON p.id_products = i.id_products WHERE p.category = $1',kategori)
+  .then((data) => {
+    res.status(200).json({success:true,message:'Barang berdasarkan kategori berhasil di ambil',data})
+  }).catch((err) => {
+    console.error("Error getting products by category:",err);
+    res.status(500).json({success:false,message:'Error getting products by category',error:err})
+  })
+})
+
+
 //Put
 
 app.put('/api/update/persediaan-barang', AuthJWTMiddleware, (req, res) => {

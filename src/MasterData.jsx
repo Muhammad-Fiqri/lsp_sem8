@@ -1,26 +1,59 @@
+import { useEffect, useState } from 'react';
 import './stylesheet/MasterData.css'
 
 export default function MasterData() {
-    const masterDataData = {
+    const masterDataTemplate = {
         kategori_barang : [
             {
-            name_products: "a",
-            category: "a",
-            stocks: "a"
+            name_products: "",
+            category: "",
+            stocks: ""
             }
         ],
         daftar_semua_nama_barang : [
             {
-                id_products: "1",
-                name_products: "a"
+                id_products: "",
+                name_products: ""
             }
         ],
         manajemen_pengguna : [
             { 
-                username: "a",
-                role: "a"
+                username: "",
+                role: ""
             }
         ]
+    }
+
+    const [masterData,setMasterData] = useState(masterDataTemplate);
+
+    const handleCategoryChange = async (e) => {
+        e.preventDefault;
+        let category = e.target.value
+
+        if(category == "") {
+            setMasterData((prev) => ({ ...prev, kategori_barang : masterDataTemplate.kategori_barang }));
+            return;
+        }
+        
+        const token = sessionStorage.getItem('jwt');
+        try {
+            const response = await fetch(`http://localhost:3000/api/get/master-data/kategori-barang/${category}`,{
+                method: 'GET',
+                headers: {
+                    Authorization: token
+                }
+            })
+
+            const data = await response.json();
+            if (data.success) {
+                setMasterData((prev) => ({ ...prev, kategori_barang : data.data }));
+            } else {
+                setMasterData((prev) => ({ ...prev, kategori_barang : masterDataTemplate.kategori_barang }));
+            }
+        } catch (error) {
+            console.error("Error fetching product by category:", error);
+            setMasterData((prev) => ({ ...prev, kategori_barang : masterDataTemplate.kategori_barang }));
+        }
     }
 
     return(
@@ -28,7 +61,7 @@ export default function MasterData() {
             <div className="kategori-barang">
                 <h3>Kategori Barang</h3>
                 <hr />
-                <select name="kateogri" id="kategori">
+                <select onChange={handleCategoryChange} name="kateogri" id="kategori">
                     <option value="">--Tolong Pilih Kategori--</option>
                     <option value="Struktural">Struktural</option>
                     <option value="Penunjang">Penunjang</option>
@@ -46,10 +79,9 @@ export default function MasterData() {
                     </thead>
                     <tbody>
                         { 
-                            masterDataData != null ?
-                            masterDataData.kategori_barang.map((row, i = 0) => {
+                            masterData != null ?
+                            masterData.kategori_barang.map((row, i = 0) => {
                             i += 1;
-                            
                             return(
                                 <tr key={i}>
                                 <td>{i}</td>
@@ -80,8 +112,8 @@ export default function MasterData() {
                     </thead>
                     <tbody>
                         { 
-                            masterDataData != null ?
-                            masterDataData.daftar_semua_nama_barang.map((row, i = 0) => {
+                            masterData != null ?
+                            masterData.daftar_semua_nama_barang.map((row, i = 0) => {
                             i += 1;
                             
                             return(
@@ -112,8 +144,8 @@ export default function MasterData() {
                     </thead>
                     <tbody>
                         { 
-                            masterDataData != null ?
-                            masterDataData.manajemen_pengguna.map((row, i = 0) => {
+                            masterData != null ?
+                            masterData.manajemen_pengguna.map((row, i = 0) => {
                             i += 1;
                             
                             return(
