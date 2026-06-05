@@ -83,6 +83,91 @@
                     text-align: left;
                     border-bottom: 1px solid black;
                 }
+
+                .add-products {
+                    position: relative;
+                    left: calc(100vw - 70vw);
+                }
+            }
+        }
+
+        .tambah-barang-overlay {
+            width: 90vw;
+            height: 90vh;
+            position: absolute;
+            top: 0;
+            left: 0;
+            margin-left: 60px;
+            margin-top: 25px;
+            z-index: 10;
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: 4px 4px 4px rgb(110, 110, 110);
+            display: none;
+            
+            .title-bar {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+
+                .close-button {
+                    position: relative;
+                    background-color: red;
+                    width: min-content;
+                    height: min-content;
+                    padding: 10px;
+                    justify-self: end;
+                    align-self: center;
+                    margin-right: 20px;
+                    color: white;
+                    border: 0px;
+                    border-radius: 10px;
+                    font-weight: bold;
+                    cursor: pointer;
+                }
+            }
+
+            form {
+                display: grid;
+                grid-template-columns: 1fr;
+                grid-template-rows: 0.1fr 1fr 0.1fr 1fr 1fr;
+                margin-top: 20px;
+
+                label {
+                    margin-left: 20px;
+                    margin-right: 20px;
+                }
+
+                input {
+                    margin-bottom: 20px;
+                    margin-left: 20px;
+                    margin-right: 20px;
+                    padding-left: 10px;
+                    border-radius: 10px;
+                    border: 1px solid black;
+                }
+
+                select {
+                    height: 45px;
+                    margin-top: 10px;
+                    margin-left: 20px;
+                    margin-bottom: 20px;
+                    margin-right: 20px;
+                    border-radius: 10px;
+                    background-color: white;
+                    padding-left: 10px;
+                    font-size: 15px;
+                }
+
+                button[type="submit"] {
+                    margin-left: 20px;
+                    margin-right: 20px;
+                    border-radius: 100px;
+                    border: 0px;
+                    background-color: #1100FF;
+                    color: white;
+                    font-weight: bold;
+                    cursor: pointer;
+                }
             }
         }
     }
