@@ -396,6 +396,17 @@ app.put('/api/update/master-data/account', AuthJWTMiddlewareAdminOnly, (req, res
   })
 });
 
+app.put('/api/put/master-data/products', AuthJWTMiddlewareAdminOnly, (req,res) => {
+  db.none("INSERT INTO products(name_products, category) VALUES ($1,$2)",[req.body.product_name,req.body.category])
+  .then((data) => {
+    res.status(200).json({success:false,message:"Produk baru berhasil di masukan"})
+  })
+  .catch((error) => {
+    console.error("Error adding new product: ",error);
+    res.status(500).json({success:false,message:"Error adding new product",error})
+  })
+})
+
 //POST
 
 app.post('/api/create/persediaan-barang/manager-account', AuthJWTMiddlewareAdminOnly, (req,res) => {
