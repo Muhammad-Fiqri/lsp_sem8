@@ -7,6 +7,7 @@ import DashboardLayout from './DashboardLayout.jsx'
 import Dashboard from './Dashboard.jsx'
 import PersediaanBarang from './PersediaanBarang.jsx';
 import MasterData from './MasterData.jsx';
+import Laporan from './Laporan.jsx';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -17,6 +18,7 @@ createRoot(document.getElementById('root')).render(
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/persediaan-barang" element={<PersediaanBarang />} />
           <Route path="/master-data" element={<MasterData/>}/>
+          <Route path="/laporan" element={<Laporan/>}/>
         </Route>
       </Routes>
     </BrowserRouter>

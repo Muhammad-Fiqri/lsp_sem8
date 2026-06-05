@@ -1,0 +1,60 @@
+.laporan {
+    width: 100%;
+    height: 80vh;
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-template-rows: auto;
+    column-gap: 20px;
+
+    div[class^="total-"] {
+        overflow-y: scroll;
+    }
+
+    .total-stok-masuk {
+        width: 100%;
+        height: 70vh;
+        grid-column: 1 / 2;
+        grid-row: 2/3;
+        background-color: white;
+        border-radius: 20px;
+        h3 {
+            color: #1100FF;
+            padding: 20px;
+        }
+
+        table {
+            width: 100%;
+            padding: 20px;
+            tr {
+                th {
+                    text-align: left;
+                    border-bottom: 1px solid black;
+                }
+            }
+        }
+    }
+
+    .total-stok-keluar {
+        width: 100%;
+        height: 70vh;
+        grid-column: 2 / 3;
+        grid-row: 2/3;
+        background-color: white;
+        border-radius: 20px;
+        h3 {
+            color: #1100FF;
+            padding: 20px;
+        }
+
+        table {
+            width: 100%;
+            padding: 20px;
+            tr {
+                th {
+                    text-align: left;
+                    border-bottom: 1px solid black;
+                }
+            }
+        }
+    }
+}

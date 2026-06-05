@@ -133,7 +133,7 @@ app.post('/api/auth/verifyJwt', (req, res) => {
   }
 });
 
-//Get
+//# Get
 
 app.get('/api/get/dashboard',AuthJWTMiddleware, async (req,res) => {
   async function getDashboardData() {
@@ -191,6 +191,39 @@ app.get('/api/get/dashboard',AuthJWTMiddleware, async (req,res) => {
   let dashboard_data = await getDashboardData()
 
   res.status(200).json({success: true, dashboard_data})
+});
+
+app.get('/api/get/laporan',AuthJWTMiddleware, async (req,res) => {
+  async function getLaporanData() {
+    let laporan_data = {
+      total_stok_masuk: null,
+      total_stok_keluar: null,
+    }
+
+    await db.any("SELECT * FROM transactions WHERE type = 'in'")
+    .then((data) => {
+      laporan_data.total_stok_masuk = data
+    })
+    .catch((err) => {
+      console.err('Error getting type in transactions:',err);
+      res.status(500).json({success: false, message: "Gagal mendapat transaksi masuk"})
+    })
+
+    await db.any("SELECT * FROM transactions WHERE type = 'out'")
+    .then((data) => {
+      laporan_data.total_stok_keluar = data
+    })
+    .catch((err) => {
+      console.err('Error getting type in transactions:',err);
+      res.status(500).json({success: false, message: "Gagal mendapat transaksi keluar"})
+    })
+
+    return laporan_data;
+  }
+
+  let laporan_data = await getLaporanData()
+
+  res.status(200).json({success: true, message:"Berhasil mendapat data laporan" ,laporan_data})
 });
 
 
