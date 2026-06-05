@@ -1,4 +1,6 @@
 # I WANT TO GRADUATEEEEE!
+## Reason:
+This website is made for Gunadarma University LSP (Lembaga Sertifikasi Profesi/Profession Certification Programme) on Semester 8, by passing this programme I will get a certificate for JWP (Junior Web Programming) and I can graduate in maybe 2-3 month (If I am lucky and passed the Kompre exam that is)
 
 # Last Work:
 - Make the middleware security (I forgot) ✅
