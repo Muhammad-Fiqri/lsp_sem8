@@ -1,4 +1,4 @@
-# AKU MAU LULUS
+# I WANT TO GRADUATEEEEE!
 
 # Last Work:
 - Make the middleware security (I forgot) ✅
