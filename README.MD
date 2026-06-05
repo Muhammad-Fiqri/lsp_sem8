@@ -8,6 +8,7 @@
 - Make Manager Only Able To See Laporan ✅
 
 # Next Plan:
+- Make Add New Prodcuts Form Overlay on Master Data
 
 # How To Run:
 React

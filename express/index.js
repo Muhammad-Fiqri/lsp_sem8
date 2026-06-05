@@ -47,13 +47,12 @@ const AuthJWTMiddlewareAdminOnly = function(req,res,next) {
     function parseJwt (token) {
       var base64Url = token.split('.')[1];
       var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-      var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
-          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-      }).join(''));
+      const jsonPayload = Buffer.from(base64, 'base64').toString('utf-8');
 
       return JSON.parse(jsonPayload);
     }
     const decodedToken = parseJwt(token);
+    console.log(decodedToken)
     if (decodedToken.role == "manager") {
         return res.status(401).send({success: false, message: "Access Denied, Admin Only"});
     }
@@ -65,6 +64,7 @@ const AuthJWTMiddlewareAdminOnly = function(req,res,next) {
         return res.status(401).send({success: false, message: "Access Denied"});
     }
   } catch (err) {
+    console.log("Error: ", err);
     return res.status(401).json({success: false, message: "Error verifying JWT", error: err});
   }
 }
