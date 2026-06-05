@@ -253,8 +253,21 @@ app.get('/api/get/master-data/semua-nama-barang/:nama_barang', AuthJWTMiddleware
   }
 })
 
-//Put
+app.get('/api/get/master-data/account', AuthJWTMiddleware, (req,res) => {
+  db.any("SELECT username, role FROM users")
+  .then((data) => {
+    console.log("data: ",data);
+    res.status(200).json({success:true,message:"Users data successfully retrieved",data})
+  })
+  .catch((error) => {
+    console.error("error: ",error);
+    res.status(500).json({success:false,message:"Error getting users data"})
+  })
+})
 
+//# Put
+
+//insert transaction history and update stocks count
 app.put('/api/update/persediaan-barang', AuthJWTMiddleware, (req, res) => {
   const { type, id_products, name_products, amount, date } = req.body;
   console.log(req.body);
@@ -291,6 +304,29 @@ app.put('/api/update/persediaan-barang', AuthJWTMiddleware, (req, res) => {
     console.error("Error handling persediaan barang form: ", err);
     res.status(500).json({ success: false, message: 'Internal server error during transaction' });
   });
+});
+
+//update account password and username
+app.put('/api/update/master-data/account', AuthJWTMiddleware, (req, res) => {
+  const {username, password, role} = req.body
+
+  bcrypt.hash(req.body.password, 10, (err, hashedPassword) => {
+    if (err) {
+      console.error('Error hashing password:', err);
+      res.status(500).json({ success: false, message: 'Error occurred while signing up.' });
+      return;
+    }
+
+    db.none("UPDATE users SET password = $1 WHERE username = $2 AND role = $3",[hashedPassword,username,role])
+    .then((data) => {
+      console.log("data: ",data);
+      res.status(200).json({success:true,message:'Password has been changed successfully',data})
+    })
+    .catch((error) => {
+      console.error("error: ",error);
+      res.status(500).json({success:false,message:'Failed changing password',error})
+    })
+  })
 });
 
 //POST

@@ -200,7 +200,73 @@ export default function MasterData() {
         if(mode == "delete") {
             deleteUser(token)
         }
+
+        async function updateUserPassword(token) {
+            try {
+                const response = await fetch('http://localhost:3000/api/update/master-data/account', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type' : 'application/json',
+                        'Authorization'  : token
+                    },
+                    body: JSON.stringify({
+                        username,
+                        password,
+                        role
+                    })
+                })
+
+                const data = await response.json();
+
+                if(data.success){
+                    alert(data.message);
+                } else {
+                    alert(data.message);
+                    console.error(data.error)
+                }
+            } catch(err) {
+                alert("Failed updating account");
+                console.log(err);
+            }
+        }
+
+        if(mode == "update") {
+            updateUserPassword(token)
+        }
     }
+
+    const getUsersData = async () => {
+        const token = sessionStorage.getItem('jwt');
+        try {
+            const response = await fetch('http://localhost:3000/api/get/master-data/account', {
+                method: 'GET',
+                headers: {
+                    'Content-Type' : 'application/json',
+                    'Authorization'  : token
+                }
+            })
+
+            const data = await response.json();
+            console.log(data);
+            if(data.success){
+                alert(data.message);
+                setMasterData((prev) => ({ ...prev, manajemen_pengguna: data.data }));
+            } else {
+                alert(data.message);
+                console.error(data.error)
+                setMasterData((prev) => ({ ...prev, manajemen_pengguna: masterDataTemplate.manajemen_pengguna }));
+            }
+        } catch(err) {
+            alert("Failed getting users data");
+            console.log(err);
+            setMasterData((prev) => ({ ...prev, manajemen_pengguna: masterDataTemplate.manajemen_pengguna }));
+        }
+    }
+
+
+    useEffect(() => {
+        getUsersData()
+    },[])
 
     return(
         <div className="master-data">
