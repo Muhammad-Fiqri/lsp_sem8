@@ -5,9 +5,9 @@
 - Making Persediaan Barang Page ✅
 - Make Master Data Page ✅
 - Make Laporan Page ✅
+- Make Manager Only Able To See Laporan ✅
 
 # Next Plan:
-- Make Manager Only Able To See Laporan
 
 # How To Run:
 React
