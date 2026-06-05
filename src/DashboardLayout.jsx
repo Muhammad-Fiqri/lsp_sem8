@@ -31,6 +31,23 @@ export default function DashboardLayout() {
     const decodedToken = parseJwt(token);
     setDecodedToken(decodedToken);
 
+    if (decodedToken.role == 'manager') {
+      document.querySelector(".nav-dashboard").style.display = "none";
+      document.querySelector(".nav-persediaan-barang").style.display = "none";
+      document.querySelector(".nav-master-data").style.display = "none";
+
+      const allowedEndpoint = [
+        'http://localhost:5173/dashboard',
+        'http://localhost:5173/persediaan-barang',
+        'http://localhost:5173/master-data'
+      ]
+
+      if (allowedEndpoint.includes(window.location.href)) {
+        alert("Akses di larang untuk akun ini");
+        window.location.href = '/laporan';
+      }
+    }
+
     const response = fetch("http://localhost:3000/api/auth/verifyJwt", {
       method: "POST",
       headers: {

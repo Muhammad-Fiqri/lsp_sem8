@@ -35,6 +35,40 @@ const AuthJWTMiddleware = function(req,res,next) {
   }
 }
 
+const AuthJWTMiddlewareAdminOnly = function(req,res,next) {
+  let TokenHeaderKey = process.env.TOKEN_HEADER_KEY;
+  let jwtSecretKey = process.env.JWT_SECRET_KEY || 'your_jwt_secret_key';
+
+  try {
+    const token = req.header(TokenHeaderKey);
+
+    const verified = jwt.verify(token, jwtSecretKey);
+
+    function parseJwt (token) {
+      var base64Url = token.split('.')[1];
+      var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join(''));
+
+      return JSON.parse(jsonPayload);
+    }
+    const decodedToken = parseJwt(token);
+    if (decodedToken.role == "manager") {
+        return res.status(401).send({success: false, message: "Access Denied, Admin Only"});
+    }
+
+    if (verified) {
+        console.log({success: true, message: "Successfully Verified"});
+        next()
+    } else {
+        return res.status(401).send({success: false, message: "Access Denied"});
+    }
+  } catch (err) {
+    return res.status(401).json({success: false, message: "Error verifying JWT", error: err});
+  }
+}
+
 //Auth
 
 app.post('/api/auth/login', (req, res) => {
@@ -66,7 +100,7 @@ app.post('/api/auth/login', (req, res) => {
         };
         const token = jwt.sign(jwtdata, jwtSecretKey, { expiresIn: '1h' });
 
-        res.json({ success: true, message: 'Login successful!', jwt: token });
+        res.json({ success: true, message: 'Login successful!', jwt: token , role: data.role});
       } else {
         res.status(401).json({ success: false, message: 'Invalid username or password.' });
       }
@@ -135,7 +169,7 @@ app.post('/api/auth/verifyJwt', (req, res) => {
 
 //# Get
 
-app.get('/api/get/dashboard',AuthJWTMiddleware, async (req,res) => {
+app.get('/api/get/dashboard',AuthJWTMiddlewareAdminOnly, async (req,res) => {
   async function getDashboardData() {
     let dashboard_data = {
       total_barang: null,
@@ -228,7 +262,7 @@ app.get('/api/get/laporan',AuthJWTMiddleware, async (req,res) => {
 
 
 
-app.get('/api/get/persediaan-barang', AuthJWTMiddleware, (req,res) => {
+app.get('/api/get/persediaan-barang', AuthJWTMiddlewareAdminOnly, (req,res) => {
   db.any("SELECT * FROM item_stocks ORDER BY stocks ASC")
   .then((data) => {
     res.status(200).json({success:true,persediaanBarang_data:data})
@@ -238,7 +272,7 @@ app.get('/api/get/persediaan-barang', AuthJWTMiddleware, (req,res) => {
   })
 })
 
-app.get('/api/get/persediaan-barang/nama-barang-from-id-barang/:id_barang_masuk', AuthJWTMiddleware, (req,res) => {
+app.get('/api/get/persediaan-barang/nama-barang-from-id-barang/:id_barang_masuk', AuthJWTMiddlewareAdminOnly, (req,res) => {
   const id_barang_masuk = req.params.id_barang_masuk
   db.one('SELECT name_products FROM products WHERE id_products = $1',id_barang_masuk)
   .then((data) => {
@@ -252,7 +286,7 @@ app.get('/api/get/persediaan-barang/nama-barang-from-id-barang/:id_barang_masuk'
 
 
 
-app.get('/api/get/master-data/kategori-barang/:kategori', AuthJWTMiddleware, (req,res) => {
+app.get('/api/get/master-data/kategori-barang/:kategori', AuthJWTMiddlewareAdminOnly, (req,res) => {
   const kategori = req.params.kategori;
 
   db.any('SELECT p.name_products, p.category, i.stocks FROM products p LEFT JOIN item_stocks i ON p.id_products = i.id_products WHERE p.category = $1',kategori)
@@ -264,7 +298,7 @@ app.get('/api/get/master-data/kategori-barang/:kategori', AuthJWTMiddleware, (re
   })
 })
 
-app.get('/api/get/master-data/semua-nama-barang/:nama_barang', AuthJWTMiddleware, (req,res) => {
+app.get('/api/get/master-data/semua-nama-barang/:nama_barang', AuthJWTMiddlewareAdminOnly, (req,res) => {
   const nama_barang = req.params.nama_barang
 
   if (nama_barang != '*') {
@@ -286,7 +320,7 @@ app.get('/api/get/master-data/semua-nama-barang/:nama_barang', AuthJWTMiddleware
   }
 })
 
-app.get('/api/get/master-data/account', AuthJWTMiddleware, (req,res) => {
+app.get('/api/get/master-data/account', AuthJWTMiddlewareAdminOnly, (req,res) => {
   db.any("SELECT username, role FROM users")
   .then((data) => {
     console.log("data: ",data);
@@ -301,7 +335,7 @@ app.get('/api/get/master-data/account', AuthJWTMiddleware, (req,res) => {
 //# Put
 
 //insert transaction history and update stocks count
-app.put('/api/update/persediaan-barang', AuthJWTMiddleware, (req, res) => {
+app.put('/api/update/persediaan-barang', AuthJWTMiddlewareAdminOnly, (req, res) => {
   const { type, id_products, name_products, amount, date } = req.body;
   console.log(req.body);
 
@@ -340,7 +374,7 @@ app.put('/api/update/persediaan-barang', AuthJWTMiddleware, (req, res) => {
 });
 
 //update account password and username
-app.put('/api/update/master-data/account', AuthJWTMiddleware, (req, res) => {
+app.put('/api/update/master-data/account', AuthJWTMiddlewareAdminOnly, (req, res) => {
   const {username, password, role} = req.body
 
   bcrypt.hash(req.body.password, 10, (err, hashedPassword) => {
@@ -364,7 +398,7 @@ app.put('/api/update/master-data/account', AuthJWTMiddleware, (req, res) => {
 
 //POST
 
-app.post('/api/create/persediaan-barang/manager-account', AuthJWTMiddleware, (req,res) => {
+app.post('/api/create/persediaan-barang/manager-account', AuthJWTMiddlewareAdminOnly, (req,res) => {
   console.log(req.body);
 
   // Handle signup logic here, e.g., create user account, etc.
@@ -401,7 +435,7 @@ app.post('/api/create/persediaan-barang/manager-account', AuthJWTMiddleware, (re
 
 //DELETE
 
-app.delete('/api/delete/account',AuthJWTMiddleware, (req,res) => {
+app.delete('/api/delete/account',AuthJWTMiddlewareAdminOnly, (req,res) => {
   console.log('/api/delete/account: ',req.body);
 
   db.oneOrNone("SELECT * FROM users WHERE username = $1 AND role = $2",[req.body.username,req.body.role])
