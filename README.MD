@@ -8,3 +8,16 @@
 
 # Next Plan:
 - Make Admin Only Able To See Laporan
+
+# How To Run:
+React
+```
+yarn
+yarn run dev
+```
+Express
+```
+cd express
+yarn
+yarn run dev
+```
