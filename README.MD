@@ -7,7 +7,7 @@
 - Make Laporan Page ✅
 
 # Next Plan:
-- Make Admin Only Able To See Laporan
+- Make Manager Only Able To See Laporan
 
 # How To Run:
 React
