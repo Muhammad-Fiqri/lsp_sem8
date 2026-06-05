@@ -30,7 +30,13 @@ export default function Login() {
 
       if (data.success) {
         sessionStorage.setItem("jwt", data.jwt);
-        window.location.href = "/dashboard"; // Change this to your desired route
+
+        if(data.role == 'admin'){
+          window.location.href = "/dashboard";
+        } else if (data.role == 'manager'){
+          window.location.href = "/laporan";
+        }
+
       }
     });
   }
