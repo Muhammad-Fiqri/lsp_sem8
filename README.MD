@@ -4,6 +4,7 @@
 - Make the middleware security (I forgot) ✅
 - Making Persediaan Barang Page ✅
 - Make Master Data Page ✅
+- Make Laporan Page ✅
 
 # Next Plan:
-Make Laporan Page
+- Make Admin Only Able To See Laporan
