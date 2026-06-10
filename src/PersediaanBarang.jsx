@@ -2,8 +2,9 @@ import "./stylesheet/PersediaanBarang.css";
 import { useRef,useEffect, useState } from "react";
 
 export default function PersediaanBarang() {
-    const [persediaanBarangData, setPersediaanBarangData] = useState(null);
+    const [persediaanBarangData, setPersediaanBarangData] = useState(null); // state untuk menyimpan data persediaan barang dari API
 
+    //state dari line 8-16 berisi data input dari form
     const [IDBarangMasuk, setIDBarangMasuk] = useState("");
     const [namaBarangMasuk, setNamaBarangMasuk] = useState("");
     const [jumlahBarangMasuk, setJumlahBarangMasuk] = useState("");
@@ -14,7 +15,7 @@ export default function PersediaanBarang() {
     const [jumlahBarangKeluar, setJumlahBarangKeluar] = useState("");
     const [loadingNamaBarangKeluar, setLoadingNamaBarangKeluar] = useState(false);
 
-    function getPersediaanBarangData() {
+    function getPersediaanBarangData() { // fungsi ini berguna untuk mengambil data persediaan-barang dari API lalu menyimpannya pada state
         const token = sessionStorage.getItem('jwt');
 
         const response = fetch("http://localhost:3000/api/get/persediaan-barang", {
@@ -32,8 +33,9 @@ export default function PersediaanBarang() {
             }
         })
     }
+
     const hasRun = useRef(false);
-    useEffect(() => {
+    useEffect(() => { // hooks useEffect, hanya di jalankan di awal, pada hooks ini fungsi getPersediaanBarangData() dipanggil
         if(hasRun.current) return;
         hasRun.current = true;
 
@@ -338,7 +340,7 @@ export default function PersediaanBarang() {
                                     <td>{i}</td>
                                     <td>{row.name_products}</td>
                                     <td>{row.stocks}</td>
-                                    <td className={row.stocks <= 0 ? "status status--unavailable" : "status status--available"}>{row.stocks == 0 ? "Tidak Tersedia" : "Tersedia"}</td>
+                                    <td className={row.stocks <= 5 ? "status status--unavailable" : "status status--available"}>{row.stocks < 5 ? "Tidak Tersedia" : row.stocks > 5 ? "Tersedia" : row.stocks == 5 ? "Warning" : ""}</td>
                                 </tr>
                             )
                         })

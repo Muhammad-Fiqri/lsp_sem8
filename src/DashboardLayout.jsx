@@ -4,9 +4,9 @@ import { Outlet } from 'react-router';
 import './stylesheet/DashboardLayout.css';
 
 export default function DashboardLayout() {
-  const [decodedToken, setDecodedToken] = useState({ username: '', role: '' });
+  const [decodedToken, setDecodedToken] = useState({ username: '', role: '' }); //state berisi token JWT yang sudah di decode
 
-  function parseJwt (token) {
+  function parseJwt (token) { // fungsi untuk mendecode token JWT yang ada pada SessionStorage
       var base64Url = token.split('.')[1];
       var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
       var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
@@ -16,8 +16,8 @@ export default function DashboardLayout() {
       return JSON.parse(jsonPayload);
   }
 
-  const  hasRun = useRef(false);
-  useEffect(() => {
+  const  hasRun = useRef(false); 
+  useEffect(() => { // hooks useEffect berjalan setiap kali component React pertama kali di load, pada fungsi ini ia akan mengecek apakah JWT ada, kalau ada maka di verify dan di check role user apa agar ia hanya dapat mengakses halaman yang ia miliki akses, kalau tidak ada user akan di suruh kembali ke halaman login
     if (hasRun.current) return;
     hasRun.current = true;
 
@@ -65,24 +65,24 @@ export default function DashboardLayout() {
     });
   }, []);
 
-  const toggleSidebar = () => {
+  const toggleSidebar = () => { // fungsi ini berguna untuk mengecilkan dan membesarkan sidebar
     const sidebar = document.querySelector('.side-bar');
     sidebar.style.width = sidebar.style.width === '250px' ? '40px' : '250px';
     const sidebarButtons = document.querySelectorAll('.close-sidebar-button > img');
     sidebarButtons[0].style.transform = sidebar.style.width === '250px' ? 'rotate(90deg)' : 'rotate(-90deg)';
   }
 
-  const Logout = () => {
+  const Logout = () => { // fungsi ini di gunakan untuk menghapus JWT dan logout
     sessionStorage.removeItem('jwt'); // Clear the JWT token from session storage
     alert('You have been logged out. Redirecting to login page.');
     window.location.href = '/'; // Redirect to login page
   }
 
   return (
-    <div className="dashboard-layout">
+    <div className="dashboard-layout"> {/* pada component ini ada Top Nav, Side Bar dan Outlet dari Content */}
       <div className="top-nav">
         <img src="/Logo.svg" alt="Logo" className="logo" />
-        <h1>Construction Material Manager</h1>
+        <h1>PT JeWePe Steel</h1>
       </div>
       <div className="side-bar">
         <div className="close-sidebar-button">

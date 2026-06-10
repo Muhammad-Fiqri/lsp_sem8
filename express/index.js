@@ -409,7 +409,7 @@ app.put('/api/put/master-data/products', AuthJWTMiddlewareAdminOnly, (req,res) =
 
 //POST
 
-app.post('/api/create/persediaan-barang/manager-account', AuthJWTMiddlewareAdminOnly, (req,res) => {
+app.post('/api/create/master-data/manager-account', AuthJWTMiddlewareAdminOnly, (req,res) => {
   console.log(req.body);
 
   // Handle signup logic here, e.g., create user account, etc.

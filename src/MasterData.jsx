@@ -136,7 +136,7 @@ export default function MasterData() {
         }
 
         async function createUserManager(token) {
-            const response = await fetch('http://localhost:3000/api/create/persediaan-barang/manager-account', {
+            const response = await fetch('http://localhost:3000/api/create/master-data/manager-account', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -2,10 +2,10 @@ import { useEffect, useRef, useState } from 'react';
 import './stylesheet/Dashboard.css'
 
 export default function Dashboard() {
-  const [dashboardData, setDashboardData] = useState(null)
+  const [dashboardData, setDashboardData] = useState(null) // state menyimpan data dashboard dari API
 
   const hasRun = useRef(false);
-  useEffect(() => {
+  useEffect(() => { // fungsi ini hanya akan berjalan sekali ketika component di load karena sifat dari Hooks useEffects, gunanya adalah mengambil data dashboard dari API endpoint dashboard GET
     if(hasRun.current) return;
     hasRun.current = true;
 
@@ -43,6 +43,7 @@ export default function Dashboard() {
           </thead>
             <tbody>
               { 
+                /* menampilkan data total barang menggunakan map function dari array */
                 dashboardData != null ?
                 dashboardData.total_barang.map((row, i = 0) => {
                   i += 1;
@@ -76,6 +77,7 @@ export default function Dashboard() {
           </thead>
           <tbody>
               { 
+                /* menampilkan data total barang masuk menggunakan map function dari array */
                 dashboardData != null ?
                 dashboardData.total_stok_masuk.map((row, i = 0) => {
                   i += 1;
@@ -109,6 +111,7 @@ export default function Dashboard() {
           </thead>
           <tbody>
               { 
+                /* menampilkan data total barang keluar menggunakan map function dari array */
                 dashboardData != null ?
                 dashboardData.total_stok_keluar.map((row, i = 0) => {
                   i += 1;
@@ -142,6 +145,7 @@ export default function Dashboard() {
           </thead>
           <tbody>
             { 
+              /* menampilkan data total stok terendah menggunakan map function dari array */
               dashboardData != null ?
               dashboardData.total_stok_terendah.map((row, i = 0) => {
                 i += 1;
@@ -175,6 +179,7 @@ export default function Dashboard() {
           </thead>
           <tbody>
             { 
+              /* menampilkan data total stok tertinggi menggunakan map function dari array */
               dashboardData != null ?
               dashboardData.total_stok_tertinggi.map((row, i = 0) => {
                 i += 1;
