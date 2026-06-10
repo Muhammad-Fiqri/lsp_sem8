@@ -11,7 +11,7 @@ This website is made for Gunadarma University LSP (Lembaga Sertifikasi Profesi/P
 - Make Add New Prodcuts Form Overlay on Master Data ✅
 
 # Next Plan:
--
+- Ability to print laporan page
 
 # How To Run:
 Make sure to have .env file on ./express/ containing this:
